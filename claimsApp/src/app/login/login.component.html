@@ -1,0 +1,21 @@
+<nz-card nzTitle="Login">
+    <form nz-form (ngSubmit)="login()">
+      <nz-form-item>
+        <nz-form-label nzFor="username" nzRequired>Username</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="username" name="username" required placeholder="Username" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzFor="password" nzRequired>Password</nz-form-label>
+        <nz-form-control>
+          <input nz-input [(ngModel)]="password" name="password" required type="password" placeholder="Password" />
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button nzType="primary" [disabled]="isLoading" type="submit">
+        <span *ngIf="!isLoading">Login</span>
+        <nz-spin *ngIf="isLoading"></nz-spin>
+      </button>
+    </form>
+  </nz-card>
+  

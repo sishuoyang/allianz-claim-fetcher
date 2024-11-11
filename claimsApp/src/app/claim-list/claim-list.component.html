@@ -1,0 +1,85 @@
+<nz-table [nzData]="claims" [nzLoading]="isLoading" nzShowPagination="false">
+    <thead>
+      <tr>
+        <th nzColumnKey="id" nzShowSort>Claim ID</th>
+        <th nzColumnKey="submitterType" nzShowSort>Type</th>
+        <th nzColumnKey="submissionDate" nzShowSort>Submission Date</th>
+        <th nzColumnKey="status" nzShowSort>Status</th>
+        <th nzColumnKey="invoice_patientName" nzShowSort>Patient Name</th>
+        <th nzColumnKey="invoice_treatmentProviderName" nzShowSort>Provider</th>
+        <th nzColumnKey="invoice_date" nzShowSort>Invoice Date</th>
+        <th nzColumnKey="invoice_amount" nzShowSort>Invoice Amount</th>
+        <th nzColumnKey="adjustments" nzShowSort>Adjustments</th> <!-- Adjustments Column within Invoice context -->
+        <th nzColumnKey="payment_date" nzShowSort>Payment Date</th>
+        <th nzColumnKey="payment_amount" nzShowSort>Payment Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let claim of claims">
+        <td>{{ claim.id }}</td>
+        <td>{{ claim.submitterType }}</td>
+        <td>{{ claim.submissionDate | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ claim.status }}</td>
+  
+        <!-- Display each invoice's patient name -->
+        <td>
+          <div *ngFor="let invoice of claim.invoices">
+            {{ invoice.patientName }}
+          </div>
+        </td>
+  
+        <!-- Display each invoice's provider name -->
+        <td>
+          <div *ngFor="let invoice of claim.invoices">
+            {{ invoice.treatmentProviderName }}
+          </div>
+        </td>
+  
+        <!-- Display each invoice date -->
+        <td>
+          <div *ngFor="let invoice of claim.invoices">
+            {{ invoice.date | date: 'yyyy-MM-dd' }}
+          </div>
+        </td>
+  
+        <!-- Display each invoice amount -->
+        <td>
+          <div *ngFor="let invoice of claim.invoices">
+            {{ invoice.amount | currency }}
+          </div>
+        </td>
+  
+        <!-- Display each adjustment type in a nested row under Adjustments -->
+        <td>
+          <div *ngFor="let invoice of claim.invoices">
+            <div *ngIf="invoice.adjustments?.length > 0; else noAdjustments">
+              <div *ngFor="let adjustment of invoice.adjustments">
+                {{ adjustment.type }} -- {{ adjustment.currency }}{{ adjustment.amount }}
+              </div>
+            </div>
+            <!-- Display "No Adjustments" if adjustments array is empty for this invoice -->
+            <ng-template #noAdjustments>
+              No Adjustments
+            </ng-template>
+          </div>
+        </td>
+  
+        <!-- Display each payment date -->
+        <td>
+          <div *ngFor="let payment of claim.payments">
+            {{ payment.date | date: 'yyyy-MM-dd' }}
+          </div>
+        </td>
+  
+        <!-- Display each payment amount -->
+        <td>
+          <div *ngFor="let payment of claim.payments">
+            {{ payment.amount | currency }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  
+  <button nz-button nzType="default" (click)="loadClaims()" [disabled]="isLoading">Load More</button>
+  
